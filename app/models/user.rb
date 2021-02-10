@@ -9,6 +9,7 @@ class User < ApplicationRecord
   DIGEST = OpenSSL::Digest::SHA256.new
   USERNAME_REGEX = /\A\w+\z/
   USERNAME_EMAIL_REGEX = /\A[\w\d]+@[\w\d]+\.[\w]+\z/
+  BACKGROUND_REGEX = /\A#([a-f\d]{3}){1,2}\z/
 
   # Виртуальное поле, которое не сохраняется в базу. Из него перед сохранением
   # читается пароль, и сохраняется в базу уже зашифрованная версия пароля в
@@ -32,6 +33,8 @@ class User < ApplicationRecord
   validates :email, format: {with: USERNAME_EMAIL_REGEX}, uniqueness: true, presence: true
 
   validates :username, format: {with: USERNAME_REGEX}, length: {maximum: 40}, uniqueness: true, presence: true
+
+  validates :background, format: { with: BACKGROUND_REGEX }
 
   before_validation :normalize_username, on: :create
 
